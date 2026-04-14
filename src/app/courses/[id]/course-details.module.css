@@ -1,0 +1,152 @@
+.detailsHero {
+  padding: 6rem 1.5rem;
+  background: var(--surface-container-low);
+}
+
+.heroContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 4rem;
+  align-items: center;
+}
+
+@media (max-width: 968px) {
+  .heroContent {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+.badgeStack {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.badge {
+  padding: 0.25rem 0.75rem;
+  background: var(--surface-container-highest);
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 100px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.title {
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+}
+
+.meta {
+  display: flex;
+  gap: 2rem;
+  color: var(--on-surface-variant);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.mainContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 4rem;
+}
+
+@media (max-width: 968px) {
+  .mainContent {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  color: var(--on-surface);
+}
+
+.curriculumList {
+  display: flex;
+  flex-direction: column;
+  gap: 1px; /* Subtle separation via tonal difference */
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.curriculumItem {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: var(--surface-container-lowest);
+  transition: background 0.2s ease;
+}
+
+.curriculumItem:hover {
+  background: var(--surface-container-low);
+}
+
+.lessonNum {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--surface-container);
+  color: var(--on-surface-variant);
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lessonTitle {
+  flex-grow: 1;
+  font-weight: 500;
+  color: var(--on-surface);
+}
+
+.lessonDuration {
+  color: var(--on-surface-variant);
+  font-size: 0.75rem;
+}
+
+.lockedIcon {
+  color: var(--on-surface-variant);
+  opacity: 0.4;
+}
+
+.sidebarCard {
+  position: sticky;
+  top: 100px;
+  padding: 2.5rem;
+}
+
+.price {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+}
+
+.benefitList {
+  list-style: none;
+  font-size: 0.875rem;
+  color: var(--on-surface-variant);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.benefitItem {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}

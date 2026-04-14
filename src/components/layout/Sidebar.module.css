@@ -1,0 +1,93 @@
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  background: var(--surface-container);
+  border-right: none;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 50;
+}
+
+.logo {
+  font-family: var(--font-manrope);
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--primary);
+  text-decoration: none;
+  margin-bottom: 3rem;
+  letter-spacing: -0.02em;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-grow: 1;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: var(--on-surface-variant);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+}
+
+.navItem:hover {
+  background: var(--surface-container-high);
+  color: var(--primary);
+}
+
+.active {
+  background: var(--surface-container-lowest);
+  color: var(--primary);
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(7, 30, 39, 0.03);
+}
+
+.profile {
+  margin-top: auto;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(118, 118, 131, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--primary-container);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--on-surface);
+}
+
+.role {
+  font-size: 0.75rem;
+  color: var(--on-surface-variant);
+}

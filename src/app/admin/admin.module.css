@@ -1,0 +1,81 @@
+.adminContainer {
+  min-height: 100vh;
+  background: var(--surface);
+  padding: 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  max-width: 1200px;
+  margin-inline: auto;
+}
+
+.header h1 {
+  font-size: 2.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.courseGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.adminCard {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border: 1px solid var(--outline-variant);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.adminCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 6, 102, 0.08);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.courseTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--on-surface);
+}
+
+.courseMeta {
+  font-size: 0.875rem;
+  color: var(--on-surface-variant);
+  display: flex;
+  gap: 0.75rem;
+}
+
+.cardActions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--surface-variant);
+}
+
+.badge {
+  padding: 0.25rem 0.6rem;
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}

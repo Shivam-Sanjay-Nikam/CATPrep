@@ -1,0 +1,88 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.loginCard {
+  width: 100%;
+  max-width: 440px;
+  padding: 3rem;
+  text-align: center;
+}
+
+.logo {
+  font-family: var(--font-manrope);
+  font-weight: 800;
+  font-size: 1.125rem;
+  color: var(--primary);
+  text-decoration: none;
+  display: block;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: var(--on-surface-variant);
+  font-size: 0.875rem;
+  margin-bottom: 2.5rem;
+  line-height: 1.5;
+}
+
+.form {
+  text-align: left;
+}
+
+.inputGroup {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.inputGroup label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--on-surface);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.inputGroup input {
+  padding: 0.875rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(118, 118, 131, 0.15);
+  background: var(--surface-container-low);
+  font-family: var(--font-inter);
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.inputGroup input:focus {
+  outline: none;
+  border-color: var(--secondary);
+  background: var(--surface-container-lowest);
+  box-shadow: 0 0 0 3px rgba(0, 98, 158, 0.08);
+}
+
+.footer {
+  margin-top: 2rem;
+  font-size: 0.875rem;
+  color: var(--on-surface-variant);
+}
+
+.footer a {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}

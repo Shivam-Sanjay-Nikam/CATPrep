@@ -1,0 +1,93 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main {
+  flex-grow: 1;
+  margin-left: 260px;
+  padding: 3rem;
+  background: var(--surface);
+}
+
+.header {
+  margin-bottom: 3rem;
+}
+
+.header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.header p {
+  color: var(--on-surface-variant);
+  font-size: 1rem;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.statCard {
+  padding: 1.5rem;
+}
+
+.statValue {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 0.25rem;
+  font-family: var(--font-manrope);
+}
+
+.statLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--on-surface-variant);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.courseGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.courseInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.courseProgress {
+  margin-top: 1rem;
+}
+
+.progressBar {
+  height: 6px;
+  background: var(--surface-container);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--secondary);
+  border-radius: 3px;
+}
+
+.progressLabel {
+  font-size: 0.75rem;
+  color: var(--on-surface-variant);
+  display: flex;
+  justify-content: space-between;
+}

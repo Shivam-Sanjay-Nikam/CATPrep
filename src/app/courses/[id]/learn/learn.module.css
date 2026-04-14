@@ -1,0 +1,235 @@
+.learnContainer {
+  display: flex;
+  height: calc(100vh - 64px);
+  background: var(--surface-container-lowest);
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 320px;
+  background: var(--surface-container-low);
+  border-right: 1px solid var(--outline-variant);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebarHeader {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--outline-variant);
+}
+
+.sidebarHeader h2 {
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+}
+
+.curriculumList {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 1rem 0;
+}
+
+.lessonItem {
+  padding: 1rem 1.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-decoration: none;
+  color: inherit;
+}
+
+.lessonItem:hover {
+  background: var(--surface-container-high);
+}
+
+.activeLesson {
+  background: var(--primary-container);
+  color: var(--on-primary-container) !important;
+}
+
+.activeLesson * {
+  color: var(--on-primary-container) !important;
+}
+
+.activeLesson:hover {
+  background: var(--primary-container);
+}
+
+.mainContent {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background: white;
+  scroll-behavior: smooth;
+}
+
+.lessonDetails {
+  padding: 3rem 4rem;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.lessonDetails h1 {
+  font-size: 2.75rem;
+  margin-bottom: 2rem;
+  letter-spacing: -0.03em;
+  color: var(--on-surface);
+}
+
+.readingMeta {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.875rem;
+  color: var(--on-surface-variant);
+  margin-bottom: 3rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--surface-variant);
+}
+
+.contentBody {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: var(--on-surface-variant);
+}
+
+.contentBody p {
+  margin-bottom: 1.5rem;
+}
+
+/* Practice Zone Styles */
+.practiceZone {
+  margin-top: 5rem;
+  padding-top: 4rem;
+  border-top: 2px solid var(--surface-container-high);
+}
+
+.practiceTitle {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.practiceSubtitle {
+  color: var(--on-surface-variant);
+  margin-bottom: 2.5rem;
+}
+
+.questionCard {
+  margin-bottom: 2rem;
+  padding: 2.5rem;
+  border: 1px solid var(--outline-variant);
+}
+
+.questionNumber {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.75rem;
+}
+
+.questionText {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  color: var(--on-surface);
+}
+
+.optionsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 640px) {
+  .optionsGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.optionButton {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: var(--surface-container-lowest);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-md);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.optionButton:hover {
+  border-color: var(--primary);
+  background: var(--surface-container-low);
+}
+
+.optionLetter {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-variant);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.optionSelected {
+  border-color: var(--primary);
+  background: var(--primary-container);
+  color: var(--on-primary-container);
+}
+
+.optionSelected .optionLetter {
+  background: var(--primary);
+  color: white;
+}
+
+.optionCorrect {
+  border-color: #2e7d32 !important;
+  background: #e8f5e9 !important;
+  color: #1b5e20 !important;
+}
+
+.optionIncorrect {
+  border-color: #c62828 !important;
+  background: #ffebee !important;
+  color: #b71c1c !important;
+}
+
+.feedbackArea {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+}
+
+.feedbackSuccess {
+  background: #e8f5e9;
+  border-left: 4px solid #2e7d32;
+}
+
+.feedbackError {
+  background: #fff3e0;
+  border-left: 4px solid #ef6c00;
+}
+
+.feedbackTitle {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.explanationText {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
