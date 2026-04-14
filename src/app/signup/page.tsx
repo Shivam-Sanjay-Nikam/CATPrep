@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -10,7 +9,6 @@ import { Section } from '@/components/layout/Section';
 import styles from '../login/login.module.css';
 
 export default function SignupPage() {
-  const router = useRouter();
   const supabase = createClient();
   
   const [formData, setFormData] = useState({
@@ -43,8 +41,8 @@ export default function SignupPage() {
       setError(error.message);
       setIsLoading(false);
     } else {
-      router.push('/dashboard');
-      router.refresh();
+      setIsLoading(false);
+      window.location.assign('/dashboard');
     }
   };
 

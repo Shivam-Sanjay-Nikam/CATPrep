@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -10,7 +9,6 @@ import { Section } from '@/components/layout/Section';
 import styles from './login.module.css';
 
 export default function LoginPage() {
-  const router = useRouter();
   const supabase = createClient();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -32,8 +30,8 @@ export default function LoginPage() {
       setIsLoading(false);
     } else {
       setIsLoading(false);
-      router.push('/courses');
-      router.refresh();
+      // Full page load so middleware + RSC see the new session cookies (SPA navigate alone can race).
+      window.location.assign('/courses');
     }
   };
 
