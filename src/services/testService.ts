@@ -1,14 +1,29 @@
 import { MockTest, Question } from "@/types";
 import { createClient } from "@/utils/supabase/server";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapTest(row: any): MockTest {
+interface RawTestRow {
+  id: string;
+  title: string;
+  duration_minutes: number;
+  total_questions: number;
+  test_questions?: Array<{
+    id: string;
+    question_text: string;
+    options: string[];
+    correct_index: number;
+    explanation?: string;
+    subject?: string;
+    difficulty?: string;
+  }>;
+}
+
+function mapTest(row: RawTestRow): MockTest {
   return {
     id: row.id,
     title: row.title,
     durationMinutes: row.duration_minutes,
     totalQuestions: row.total_questions,
-    questions: (row.test_questions || []).map((q: any): Question => ({
+    questions: (row.test_questions || []).map((q): Question => ({
       id: q.id,
       text: q.question_text,
       options: q.options,

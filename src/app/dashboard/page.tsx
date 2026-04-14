@@ -106,7 +106,7 @@ export default async function DashboardPage() {
             {activeCourses.length === 0 ? (
               <Card style={{ textAlign: 'center', padding: '2.5rem' }}>
                 <p style={{ color: 'var(--on-surface-variant)', marginBottom: '1.5rem' }}>
-                  You haven't started any courses yet.
+                  You haven&apos;t started any courses yet.
                 </p>
                 <Link href="/courses">
                   <Button variant="primary">Browse Courses</Button>

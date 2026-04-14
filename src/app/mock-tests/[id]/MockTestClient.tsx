@@ -59,7 +59,6 @@ export default function MockTestClient({ test }: Props) {
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [flagged, setFlagged] = useState<Record<string, boolean>>({});
   const [timeLeft, setTimeLeft] = useState(test.durationMinutes * 60);
-  const [timeTaken, setTimeTaken] = useState(0);
   const [results, setResults] = useState<ReturnType<typeof computeResults> | null>(null);
   const [showReview, setShowReview] = useState(false);
   const [reviewIdx, setReviewIdx] = useState(0);
@@ -86,7 +85,6 @@ export default function MockTestClient({ test }: Props) {
 
   const handleSubmit = useCallback(async () => {
     const taken = test.durationMinutes * 60 - timeLeft;
-    setTimeTaken(taken);
     const res = computeResults(test.questions, answers, taken);
     setResults(res);
     setPhase('results');

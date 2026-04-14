@@ -57,8 +57,6 @@ export default async function PerformancePage() {
   // Score trend (last 6)
   const trend = attempts.slice(0, 6).reverse();
 
-  // Subject breakdown from analytics table (fallback computed from attempts)
-  const subjectStats: Record<string, { correct: number; wrong: number; unattempted: number }> = {};
   // (We don't store per-subject in attempts easily without questions breakdown,
   //  so show overall analytics from the analytics table)
 
