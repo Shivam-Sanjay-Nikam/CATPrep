@@ -156,6 +156,12 @@ export const MockTestEditor: React.FC<MockTestEditorProps> = ({ initialTest, isN
     if (expandedQ === idx) setExpandedQ(null);
   };
 
+  const stripHtml = (html: string) => {
+    if (typeof window === 'undefined') return '';
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent || "";
+  };
+
   return (
     <div style={{ maxWidth: '900px', margin: '3rem auto', padding: '0 1.5rem' }}>
 
@@ -266,7 +272,7 @@ export const MockTestEditor: React.FC<MockTestEditorProps> = ({ initialTest, isN
                       fontSize: '0.75rem', fontWeight: 700, flexShrink: 0
                     }}>{qIdx + 1}</span>
                     <span style={{ fontWeight: 600, color: q.question_text ? 'var(--on-surface)' : 'var(--on-surface-variant)' }}>
-                      {q.question_text || 'New Question — click to expand'}
+                      {q.question_text ? (stripHtml(q.question_text).substring(0, 60) + (stripHtml(q.question_text).length > 60 ? '...' : '')) : 'New Question — click to expand'}
                     </span>
                   </div>
                   <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>

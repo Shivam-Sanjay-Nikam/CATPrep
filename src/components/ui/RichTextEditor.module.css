@@ -13,16 +13,17 @@
 .toolbar {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  padding: 0.75rem;
-  background: var(--surface-container-low);
+  gap: 0.35rem;
+  padding: 0.5rem;
+  background: var(--surface-container-high);
   border-bottom: 1px solid var(--outline-variant);
+  backdrop-filter: blur(8px);
 }
 
 .toolbarGroup {
   display: flex;
   gap: 0.25rem;
-  padding-right: 0.5rem;
+  padding: 0 0.5rem;
   border-right: 1px solid var(--outline-variant);
 }
 
@@ -34,27 +35,30 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 32px;
-  height: 32px;
-  padding: 0 0.5rem;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 0.6rem;
   border: none;
   background: transparent;
   border-radius: var(--radius-sm);
-  color: var(--on-surface-variant);
-  font-size: 0.8rem;
-  font-weight: 600;
+  color: var(--on-surface);
+  font-size: 0.85rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .toolbarBtn:hover {
-  background: var(--surface-container-high);
+  background: white;
   color: var(--primary);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transform: translateY(-1px);
 }
 
 .toolbarBtn.active {
-  background: var(--primary-container);
-  color: var(--primary);
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 4px 12px var(--primary-fixed-dim);
 }
 
 .editorWrapper {
@@ -85,7 +89,8 @@
   color: var(--on-surface);
 }
 
-.editorContent ul, .editorContent ol {
+.editorContent ul,
+.editorContent ol {
   padding-left: 1.5rem;
   margin-bottom: 1rem;
 }
@@ -103,5 +108,23 @@
   height: auto;
   border-radius: var(--radius-md);
   margin: 1.5rem 0;
+  display: block;
+}
+
+.codeWrapper {
+  padding: 1rem;
+  background: #1a1b26;
+}
+
+.codeEditor {
+  width: 100%;
+  background: transparent;
+  color: #a9b1d6;
+  border: none;
+  outline: none;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  resize: vertical;
   display: block;
 }

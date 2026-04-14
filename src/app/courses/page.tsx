@@ -52,9 +52,21 @@ export default async function CoursesPage() {
               </div>
               
               <h3 style={{ fontSize: '1.25rem', marginBottom: '0.75rem' }}>{course.title}</h3>
-              <p style={{ fontSize: '0.875rem', color: 'var(--on-surface-variant)', marginBottom: '1.5rem', lineHeight: '1.6' }}>
-                {course.description}
-              </p>
+              <div 
+                style={{ 
+                  fontSize: '0.875rem', 
+                  color: 'var(--on-surface-variant)', 
+                  marginBottom: '1.5rem', 
+                  lineHeight: '1.6',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 3,
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
+                  height: '4.8em'
+                }}
+                className="rich-text-content"
+                dangerouslySetInnerHTML={{ __html: course.description }}
+              />
               
               <div style={{ marginTop: 'auto', paddingTop: '1.5rem', borderTop: '1px solid rgba(118, 118, 131, 0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>

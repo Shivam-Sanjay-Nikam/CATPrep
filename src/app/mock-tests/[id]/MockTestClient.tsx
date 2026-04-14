@@ -130,8 +130,8 @@ export default function MockTestClient({ test }: Props) {
     const subjects = Object.keys(results.subjectMap);
 
     return (
-      <div style={{ minHeight: '100vh', background: 'var(--surface)', padding: '4rem 1.5rem' }}>
-        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+      <div className={styles.resultsContainer}>
+        <div className={styles.resultsInner}>
 
           {/* Header */}
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
@@ -173,16 +173,16 @@ export default function MockTestClient({ test }: Props) {
           </div>
 
           {/* Stats Row */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginBottom: '2rem' }}>
+          <div className={styles.statsRow}>
             {[
               { label: 'Correct', value: results.correct, color: '#2e7d32', bg: '#e8f5e9' },
               { label: 'Wrong', value: results.wrong, color: '#c62828', bg: '#ffebee' },
               { label: 'Unattempted', value: results.unattempted, color: '#5c5c7a', bg: '#f0f0f7' },
               { label: 'Accuracy', value: `${accuracy}%`, color: '#1565c0', bg: '#e3f2fd' },
             ].map(stat => (
-              <div key={stat.label} style={{
-                background: stat.bg, borderRadius: 'var(--radius-md)', padding: '1.5rem',
-                textAlign: 'center', border: `1px solid ${stat.color}22`
+              <div key={stat.label} className={styles.statCard} style={{
+                background: stat.bg,
+                borderColor: `${stat.color}22`
               }}>
                 <div style={{ fontSize: '2rem', fontWeight: 800, color: stat.color }}>{stat.value}</div>
                 <div style={{ fontSize: '0.75rem', fontWeight: 700, color: stat.color, textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '0.25rem' }}>

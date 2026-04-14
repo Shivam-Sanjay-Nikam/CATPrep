@@ -23,6 +23,8 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   minHeight = '200px'
 }) => {
   const [isUploading, setIsUploading] = useState(false);
+  const [isSourceMode, setIsSourceMode] = useState(false);
+  const [sourceValue, setSourceValue] = useState(value);
 
   const editor = useEditor({
     extensions: [
@@ -39,9 +41,12 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         openOnClick: false,
       }),
     ],
+    immediatelyRender: false,
     content: value,
     onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
+      const html = editor.getHTML();
+      setSourceValue(html);
+      onChange(html);
     },
     editorProps: {
       attributes: {
@@ -50,6 +55,21 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
       },
     },
   });
+
+  const toggleSourceMode = () => {
+    if (isSourceMode) {
+      editor?.commands.setContent(sourceValue);
+    } else {
+      setSourceValue(editor?.getHTML() || '');
+    }
+    setIsSourceMode(!isSourceMode);
+  };
+
+  const handleSourceChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newVal = e.target.value;
+    setSourceValue(newVal);
+    onChange(newVal);
+  };
 
   const addImage = async () => {
     const input = document.createElement('input');
@@ -93,18 +113,21 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
             active={editor.isActive('bold')}
             label="B"
             style={{ fontWeight: 700 }}
+            disabled={isSourceMode}
           />
           <ToolbarButton 
             onClick={() => editor.chain().focus().toggleItalic().run()} 
             active={editor.isActive('italic')}
             label="I"
             style={{ fontStyle: 'italic' }}
+            disabled={isSourceMode}
           />
           <ToolbarButton 
             onClick={() => editor.chain().focus().toggleStrike().run()} 
             active={editor.isActive('strike')}
             label="S"
             style={{ textDecoration: 'line-through' }}
+            disabled={isSourceMode}
           />
         </div>
 
@@ -113,11 +136,13 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
             onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} 
             active={editor.isActive('heading', { level: 2 })}
             label="H2"
+            disabled={isSourceMode}
           />
           <ToolbarButton 
             onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} 
             active={editor.isActive('heading', { level: 3 })}
             label="H3"
+            disabled={isSourceMode}
           />
         </div>
 
@@ -126,11 +151,13 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
             onClick={() => editor.chain().focus().toggleBulletList().run()} 
             active={editor.isActive('bulletList')}
             label="• List"
+            disabled={isSourceMode}
           />
           <ToolbarButton 
             onClick={() => editor.chain().focus().toggleOrderedList().run()} 
             active={editor.isActive('orderedList')}
             label="1. List"
+            disabled={isSourceMode}
           />
         </div>
 
@@ -139,17 +166,45 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
             onClick={() => editor.chain().focus().toggleBlockquote().run()} 
             active={editor.isActive('blockquote')}
             label="Quote"
+            disabled={isSourceMode}
           />
           <ToolbarButton 
             onClick={addImage} 
             active={false}
             label={isUploading ? '...' : 'Img'}
-            disabled={isUploading}
+            disabled={isUploading || isSourceMode}
+          />
+        </div>
+
+        <div className={styles.toolbarGroup} style={{ marginLeft: 'auto', borderRight: 'none' }}>
+          <ToolbarButton 
+            onClick={toggleSourceMode} 
+            active={isSourceMode}
+            label={isSourceMode ? 'View Visual' : 'View Code </>'}
+            style={{ 
+              fontSize: '0.75rem', 
+              width: 'auto', 
+              padding: '0 1rem',
+              color: isSourceMode ? 'white' : 'var(--primary)',
+              background: isSourceMode ? 'var(--primary)' : 'transparent'
+            }}
           />
         </div>
       </div>
       
-      <EditorContent editor={editor} className={styles.editorWrapper} />
+      {isSourceMode ? (
+        <div className={styles.codeWrapper}>
+          <textarea
+            className={styles.codeEditor}
+            value={sourceValue}
+            onChange={handleSourceChange}
+            style={{ minHeight }}
+            spellCheck={false}
+          />
+        </div>
+      ) : (
+        <EditorContent editor={editor} className={styles.editorWrapper} />
+      )}
     </div>
   );
 };
