@@ -118,36 +118,45 @@ export default async function DashboardPage() {
                   const pct = item.totalLessons > 0
                     ? Math.round((item.completedLessons / item.totalLessons) * 100) : 0;
                   return (
-                    <Card key={item.courseId} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <Card key={item.courseId} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', position: 'relative', overflow: 'hidden' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <span style={{
-                          padding: '0.2rem 0.6rem', borderRadius: 'var(--radius-sm)',
-                          fontSize: '0.65rem', fontWeight: 700,
-                          background: 'var(--primary-container)', color: 'white'
-                        }}>{item.course!.difficulty}</span>
-                        <span style={{ fontSize: '0.8rem', fontWeight: 700, color: pct === 100 ? '#2e7d32' : 'var(--primary)' }}>
-                          {pct}%
-                        </span>
+                          padding: '0.3rem 0.75rem', borderRadius: '100px',
+                          fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.02em',
+                          background: 'var(--primary-container)', color: 'var(--on-primary-container)'
+                        }}>{item.course!.difficulty.toUpperCase()}</span>
+                        <div style={{ textAlign: 'right' }}>
+                          <span style={{ fontSize: '1.1rem', fontWeight: 800, color: pct === 100 ? '#2e7d32' : 'var(--primary)' }}>
+                            {pct}%
+                          </span>
+                        </div>
                       </div>
+
                       <div>
-                        <h3 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.2rem', lineHeight: 1.3 }}>
+                        <h3 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '0.4rem', lineHeight: 1.25, letterSpacing: '-0.01em' }}>
                           {item.course!.title}
                         </h3>
-                        <span style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)' }}>
-                          {item.course!.instructor?.split(',')[0]}
-                        </span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: 'var(--surface-container-high)', border: '1px solid var(--outline-variant)' }} />
+                          <span style={{ fontSize: '0.8rem', color: 'var(--on-surface-variant)', fontWeight: 500 }}>
+                            {item.course!.instructor?.split(',')[0]}
+                          </span>
+                        </div>
                       </div>
-                      <div>
+
+                      <div style={{ marginTop: '0.5rem' }}>
                         <div className={styles.progressBar}>
                           <div className={styles.progressFill} style={{ width: `${pct}%`, background: pct === 100 ? '#2e7d32' : undefined }} />
                         </div>
                         <div className={styles.progressLabel}>
-                          <span>{item.completedLessons} / {item.totalLessons} lessons</span>
+                          <span>{item.completedLessons} of {item.totalLessons} modules</span>
+                          {pct === 100 && <span style={{ color: '#2e7d32' }}>Completed</span>}
                         </div>
                       </div>
+
                       <Link href={`/courses/${item.courseId}/learn`} style={{ marginTop: 'auto' }}>
-                        <Button variant={pct === 100 ? 'outline' : 'primary'} fullWidth>
-                          {pct === 0 ? 'Start' : pct === 100 ? 'Review' : 'Continue →'}
+                        <Button variant={pct === 100 ? 'outline' : 'primary'} fullWidth style={{ fontWeight: 700 }}>
+                          {pct === 0 ? 'Start Course' : pct === 100 ? 'Review Content' : 'Continue Learning'}
                         </Button>
                       </Link>
                     </Card>

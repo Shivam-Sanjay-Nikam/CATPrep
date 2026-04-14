@@ -81,4 +81,35 @@ export const studentService = {
 
     return data || [];
   },
+
+  async updateLessonProgress(courseId: string, lessonId: string, totalLessons: number) {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    // 1. Get current progress
+    const { data: current } = await supabase
+      .from('student_progress')
+      .select('completed_lesson_ids')
+      .eq('user_id', user.id)
+      .eq('course_id', courseId)
+      .single();
+
+    let ids = current?.completed_lesson_ids || [];
+    if (!ids.includes(lessonId)) {
+      ids.push(lessonId);
+    }
+
+    // 2. Upsert progress
+    await supabase
+      .from('student_progress')
+      .upsert({
+        user_id: user.id,
+        course_id: courseId,
+        completed_lesson_ids: ids,
+        completed_lessons: ids.length,
+        total_lessons: totalLessons,
+        last_accessed: new Date().toISOString(),
+      }, { onConflict: 'user_id,course_id' });
+  },
 };

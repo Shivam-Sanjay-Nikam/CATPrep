@@ -3,6 +3,7 @@ import { redirect, notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Navbar } from '@/components/layout/Navbar';
 import { courseService } from '@/services/courseService';
+import { studentService } from '@/services/studentService';
 import { enrollmentService } from '@/services/enrollmentService';
 import { PracticeZone } from './PracticeZone';
 import { ScrollReset } from './ScrollReset';
@@ -37,6 +38,11 @@ export default async function LearnPage({ params, searchParams }: Props) {
   const currentLesson = curriculum[currentIndex];
   const prevLesson = currentIndex > 0 ? curriculum[currentIndex - 1] : null;
   const nextLesson = currentIndex < curriculum.length - 1 ? curriculum[currentIndex + 1] : null;
+
+  // 4. Update progress
+  if (currentLesson) {
+    await studentService.updateLessonProgress(id, currentLesson.id, curriculum.length);
+  }
 
   return (
     <main>
