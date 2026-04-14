@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope, Inter } from "next/font/google";
+import { Suspense } from 'react';
 import { AuthProvider } from '@/context/AuthContext';
 import { ToastProvider } from '@/components/ui/ToastProvider';
 import { NavigationProgress } from '@/components/layout/NavigationProgress';
@@ -36,7 +37,9 @@ export default function RootLayout({
         `}} />
         <AuthProvider>
           <ToastProvider>
-            <NavigationProgress />
+            <Suspense fallback={null}>
+              <NavigationProgress />
+            </Suspense>
             {children}
           </ToastProvider>
         </AuthProvider>

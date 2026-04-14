@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { redirect, notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Navbar } from '@/components/layout/Navbar';
@@ -40,7 +40,9 @@ export default async function LearnPage({ params, searchParams }: Props) {
 
   return (
     <main>
-      <ScrollReset />
+      <Suspense fallback={null}>
+        <ScrollReset />
+      </Suspense>
       <Navbar />
       <div className={styles.learnContainer}>
         {/* Sidebar */}
