@@ -7,18 +7,19 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Section } from '@/components/layout/Section';
 import styles from './login.module.css';
+import { useToast } from '@/components/ui/ToastProvider';
 
 export default function LoginPage() {
   const supabase = createClient();
+  const { toast } = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError('');
     
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -26,10 +27,12 @@ export default function LoginPage() {
     });
 
     if (error) {
-      setError(error.message);
+      toast(error.message, 'error');
       setIsLoading(false);
     } else {
       setIsLoading(false);
+      setIsRedirecting(true);
+      toast('Login successful! Entering sanctuary...', 'success');
       // Full page load so middleware + RSC see the new session cookies (SPA navigate alone can race).
       window.location.assign('/courses');
     }
@@ -45,7 +48,12 @@ export default function LoginPage() {
         <p className={styles.subtitle}>Enter your credentials to access your personalized prep environment.</p>
         
         <form className={styles.form} onSubmit={handleSubmit}>
-          {error && <div style={{ color: '#d32f2f', fontSize: '0.875rem', marginBottom: '1rem', textAlign: 'center' }}>{error}</div>}
+          {isRedirecting && (
+            <div style={{ padding: '1.5rem', background: '#f0f4ff', borderRadius: 'var(--radius-md)', marginBottom: '1.5rem', textAlign: 'center', animation: 'pulse 2s infinite' }}>
+              <p style={{ fontWeight: 700, color: 'var(--primary)', marginBottom: '0.25rem' }}>Redirecting to sanctuary...</p>
+              <p style={{ fontSize: '0.8rem', color: 'var(--on-surface-variant)' }}>Please wait while we prepare your space.</p>
+            </div>
+          )}
           
           <div className={styles.inputGroup}>
             <label htmlFor="email">Email Address</label>
@@ -56,7 +64,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required 
-              disabled={isLoading}
+              disabled={isLoading || isRedirecting}
             />
           </div>
           
@@ -69,12 +77,12 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required 
-              disabled={isLoading}
+              disabled={isLoading || isRedirecting}
             />
           </div>
           
-          <Button variant="primary" fullWidth type="submit" style={{ marginTop: '1rem' }} isLoading={isLoading}>
-            {isLoading ? 'Entering...' : 'Enter Sanctuary'}
+          <Button variant="primary" fullWidth type="submit" style={{ marginTop: '1rem' }} isLoading={isLoading || isRedirecting}>
+            {isRedirecting ? 'Redirecting...' : (isLoading ? 'Entering...' : 'Enter Sanctuary')}
           </Button>
         </form>
         

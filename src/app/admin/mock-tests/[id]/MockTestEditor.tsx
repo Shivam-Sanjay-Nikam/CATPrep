@@ -2,9 +2,11 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/ToastProvider';
 import { upsertMockTest, upsertTestQuestion, deleteTestQuestion } from '@/services/adminService';
 import { MockTest, Question } from '@/types';
 import { Button } from '@/components/ui/Button';
+import { RichTextEditor } from '@/components/ui/RichTextEditor';
 import styles from '../../courses/[id]/editor.module.css';
 
 interface MockTestEditorProps {
@@ -37,11 +39,10 @@ function blankQuestion(order: number): DraftQuestion {
 
 export const MockTestEditor: React.FC<MockTestEditorProps> = ({ initialTest, isNew }) => {
   const router = useRouter();
+  const { toast, removeToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [savingQ, setSavingQ] = useState<number | null>(null);
-  // true if this test record actually exists in the DB (either pre-existing or just saved)
   const [isSavedToDb, setIsSavedToDb] = useState(!isNew);
-  const [metaSaveMsg, setMetaSaveMsg] = useState('');
 
   const [test, setTest] = useState<Partial<MockTest>>(initialTest || {
     id: '',
@@ -71,18 +72,20 @@ export const MockTestEditor: React.FC<MockTestEditorProps> = ({ initialTest, isN
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!test.id || !test.title) {
-      alert('ID and Title are required');
+      toast('ID and Title are required', 'error');
       return;
     }
     setLoading(true);
-    setMetaSaveMsg('');
+    const toastId = toast('Saving mock test metadata...', 'loading', Infinity);
     try {
       await upsertMockTest(test);
       setIsSavedToDb(true);
-      setMetaSaveMsg('Mock test saved! You can now add questions below.');
+      removeToast(toastId);
+      toast('Mock test metadata saved!', 'success');
     } catch (err) {
       console.error(err);
-      setMetaSaveMsg('Failed to save. Is the schema applied in Supabase?');
+      removeToast(toastId);
+      toast('Failed to save metadata. Is the schema applied?', 'error');
     } finally {
       setLoading(false);
     }
@@ -110,22 +113,25 @@ export const MockTestEditor: React.FC<MockTestEditorProps> = ({ initialTest, isN
 
   const saveQuestion = async (idx: number) => {
     if (!isSavedToDb) {
-      alert('Please save the mock test metadata first (click "Save Mock Test Metadata" above).');
+      toast('Please save the mock test metadata first.', 'info');
       return;
     }
     const q = questions[idx];
     if (!q.question_text.trim() || q.options.some(o => !o.trim())) {
-      alert('Please fill in the question and all 4 options.');
+      toast('Please fill in the question and all 4 options.', 'error');
       return;
     }
     setSavingQ(idx);
+    const toastId = toast(`Saving question ${idx + 1}...`, 'loading', Infinity);
     try {
       const saved = await upsertTestQuestion({ ...q, mock_test_id: test.id as string });
       updateQ(idx, { id: saved.id });
-      alert('Question saved!');
+      removeToast(toastId);
+      toast(`Question ${idx + 1} saved successfully!`, 'success');
     } catch (err) {
       console.error(err);
-      alert('Failed to save question.');
+      removeToast(toastId);
+      toast(`Failed to save question ${idx + 1}.`, 'error');
     } finally {
       setSavingQ(null);
     }
@@ -134,11 +140,15 @@ export const MockTestEditor: React.FC<MockTestEditorProps> = ({ initialTest, isN
   const removeQuestion = async (idx: number) => {
     const q = questions[idx];
     if (q.id) {
+      const toastId = toast('Deleting question...', 'loading', Infinity);
       try {
         await deleteTestQuestion(q.id);
+        removeToast(toastId);
+        toast('Question deleted from database.', 'success');
       } catch (err) {
         console.error(err);
-        alert('Failed to delete question from database.');
+        removeToast(toastId);
+        toast('Failed to delete question.', 'error');
         return;
       }
     }
@@ -215,19 +225,6 @@ export const MockTestEditor: React.FC<MockTestEditorProps> = ({ initialTest, isN
             </Button>
           )}
         </div>
-
-        {metaSaveMsg && (
-          <div style={{
-            marginTop: '1rem',
-            padding: '0.875rem 1.25rem',
-            borderRadius: 'var(--radius-md)',
-            background: metaSaveMsg.startsWith('Mock test saved') ? '#e8f5e9' : '#ffebee',
-            color: metaSaveMsg.startsWith('Mock test saved') ? '#2e7d32' : '#c62828',
-            fontWeight: 600, fontSize: '0.9rem'
-          }}>
-            {metaSaveMsg}
-          </div>
-        )}
       </form>
 
       {/* ---- Questions Section ---- */}
@@ -290,12 +287,12 @@ export const MockTestEditor: React.FC<MockTestEditorProps> = ({ initialTest, isN
                   <div style={{ padding: '1.5rem', borderTop: '1px solid var(--outline-variant)' }}>
 
                     <div className={styles.formGroup}>
-                      <label>Question Text</label>
-                      <textarea
-                        className={styles.textarea}
+                      <label>Question Text (Rich Text)</label>
+                      <RichTextEditor 
+                        value={q.question_text || ''}
+                        onChange={html => updateQ(qIdx, { question_text: html })}
                         placeholder="Enter the full question text..."
-                        value={q.question_text}
-                        onChange={e => updateQ(qIdx, { question_text: e.target.value })}
+                        minHeight="150px"
                       />
                     </div>
 
@@ -328,13 +325,12 @@ export const MockTestEditor: React.FC<MockTestEditorProps> = ({ initialTest, isN
                     </div>
 
                     <div className={styles.formGroup}>
-                      <label>Explanation</label>
-                      <textarea
-                        className={styles.textarea}
-                        style={{ minHeight: '80px' }}
+                      <label>Explanation (Rich Text)</label>
+                      <RichTextEditor 
+                        value={q.explanation || ''}
+                        onChange={html => updateQ(qIdx, { explanation: html })}
                         placeholder="Explain why the correct answer is correct..."
-                        value={q.explanation}
-                        onChange={e => updateQ(qIdx, { explanation: e.target.value })}
+                        minHeight="100px"
                       />
                     </div>
 

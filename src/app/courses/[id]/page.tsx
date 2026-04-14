@@ -37,9 +37,11 @@ export default async function CourseDetailsPage({ params }: Props) {
               <span className={styles.badge}>{course.difficulty}</span>
             </div>
             <h1 className={styles.title}>{course.title}</h1>
-            <p style={{ fontSize: '1.25rem', color: 'var(--on-surface-variant)', marginBottom: '2.5rem', maxWidth: '600px' }}>
-              {course.description}
-            </p>
+            <div 
+              style={{ fontSize: '1.2rem', color: 'var(--on-surface-variant)', marginBottom: '2.5rem', maxWidth: '600px' }}
+              className="rich-text-content"
+              dangerouslySetInnerHTML={{ __html: course.description }}
+            />
             <div className={styles.meta}>
               <span>By {course.instructor}</span>
               <span>•</span>

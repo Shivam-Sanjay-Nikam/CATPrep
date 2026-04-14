@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Manrope, Inter } from "next/font/google";
 import { AuthProvider } from '@/context/AuthContext';
+import { ToastProvider } from '@/components/ui/ToastProvider';
+import { NavigationProgress } from '@/components/layout/NavigationProgress';
 import "./globals.css";
 
 const manrope = Manrope({
@@ -33,7 +35,10 @@ export default function RootLayout({
           h1, h2, h3, h4, h5, h6 { font-family: var(--font-manrope); }
         `}} />
         <AuthProvider>
-          {children}
+          <ToastProvider>
+            <NavigationProgress />
+            {children}
+          </ToastProvider>
         </AuthProvider>
       </body>
     </html>

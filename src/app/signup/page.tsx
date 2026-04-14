@@ -7,9 +7,11 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Section } from '@/components/layout/Section';
 import styles from '../login/login.module.css';
+import { useToast } from '@/components/ui/ToastProvider';
 
 export default function SignupPage() {
   const supabase = createClient();
+  const { toast } = useToast();
   
   const [formData, setFormData] = useState({
     name: '',
@@ -18,13 +20,12 @@ export default function SignupPage() {
     targetIIM: '',
   });
   
-  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError('');
 
     const { error } = await supabase.auth.signUp({
       email: formData.email,
@@ -38,10 +39,12 @@ export default function SignupPage() {
     });
 
     if (error) {
-      setError(error.message);
+      toast(error.message, 'error');
       setIsLoading(false);
     } else {
       setIsLoading(false);
+      setIsRedirecting(true);
+      toast('Account created! Preparing your dashboard...', 'success');
       window.location.assign('/dashboard');
     }
   };
@@ -63,7 +66,12 @@ export default function SignupPage() {
         <p className={styles.subtitle}>Begin your focused journey toward academic excellence.</p>
         
         <form className={styles.form} onSubmit={handleSubmit}>
-          {error && <div style={{ color: '#d32f2f', fontSize: '0.875rem', marginBottom: '1rem', textAlign: 'center' }}>{error}</div>}
+          {isRedirecting && (
+            <div style={{ padding: '1.5rem', background: '#f0f4ff', borderRadius: 'var(--radius-md)', marginBottom: '1.5rem', textAlign: 'center', animation: 'pulse 2s infinite' }}>
+              <p style={{ fontWeight: 700, color: 'var(--primary)', marginBottom: '0.25rem' }}>Preparing your sanctuary...</p>
+              <p style={{ fontSize: '0.8rem', color: 'var(--on-surface-variant)' }}>One moment while we set up your personalized dashboard.</p>
+            </div>
+          )}
           
           <div className={styles.inputGroup}>
             <label htmlFor="name">Full Name</label>
@@ -74,7 +82,7 @@ export default function SignupPage() {
               required 
               value={formData.name}
               onChange={handleChange}
-              disabled={isLoading}
+              disabled={isLoading || isRedirecting}
             />
           </div>
 
@@ -87,7 +95,7 @@ export default function SignupPage() {
               required 
               value={formData.email}
               onChange={handleChange}
-              disabled={isLoading}
+              disabled={isLoading || isRedirecting}
             />
           </div>
           
@@ -100,7 +108,7 @@ export default function SignupPage() {
               required 
               value={formData.password}
               onChange={handleChange}
-              disabled={isLoading}
+              disabled={isLoading || isRedirecting}
             />
           </div>
 
@@ -112,12 +120,12 @@ export default function SignupPage() {
               placeholder="e.g. IIM Ahmedabad" 
               value={formData.targetIIM}
               onChange={handleChange}
-              disabled={isLoading}
+              disabled={isLoading || isRedirecting}
             />
           </div>
           
-          <Button variant="primary" fullWidth type="submit" style={{ marginTop: '1rem' }} isLoading={isLoading}>
-            {isLoading ? 'Creating Account...' : 'Create Account'}
+          <Button variant="primary" fullWidth type="submit" style={{ marginTop: '1rem' }} isLoading={isLoading || isRedirecting}>
+            {isRedirecting ? 'Redirecting...' : (isLoading ? 'Creating Account...' : 'Create Account')}
           </Button>
         </form>
         

@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { MockTest, Question } from '@/types';
 import { Button } from '@/components/ui/Button';
+import { useToast } from '@/components/ui/ToastProvider';
 import { saveTestAttempt } from '@/services/adminService';
 import styles from './mock-test.module.css';
 
@@ -54,6 +55,7 @@ function computeResults(questions: Question[], answers: Record<string, number>, 
 }
 
 export default function MockTestClient({ test }: Props) {
+  const { toast, removeToast } = useToast();
   const [phase, setPhase] = useState<'test' | 'results'>('test');
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
@@ -91,6 +93,7 @@ export default function MockTestClient({ test }: Props) {
 
     // Persist attempt
     setSaving(true);
+    const toastId = toast('Saving your test attempt...', 'loading', Infinity);
     try {
       await saveTestAttempt({
         mock_test_id: test.id,
@@ -102,12 +105,16 @@ export default function MockTestClient({ test }: Props) {
         score_percentage: res.scorePercentage,
         time_taken_seconds: taken,
       });
+      removeToast(toastId);
+      toast('Test attempt saved successfully!', 'success');
     } catch (e) {
       console.warn('Could not save attempt:', e);
+      removeToast(toastId);
+      toast('Could not save your attempt. Please check your connection.', 'error');
     } finally {
       setSaving(false);
     }
-  }, [answers, test, timeLeft]);
+  }, [answers, test, timeLeft, toast, removeToast]);
 
   // ─── RESULTS SCREEN ───────────────────────────────────────────────
   if (phase === 'results' && results) {
@@ -279,7 +286,11 @@ export default function MockTestClient({ test }: Props) {
                       </span>
                     </div>
 
-                    <p style={{ fontSize: '1.1rem', lineHeight: 1.7, marginBottom: '1.5rem' }}>{q.text}</p>
+                    <div 
+                      style={{ fontSize: '1.2rem', lineHeight: 1.7, marginBottom: '2rem' }}
+                      className="rich-text-content"
+                      dangerouslySetInnerHTML={{ __html: q.text }} 
+                    />
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
                       {q.options.map((opt, oi) => {
@@ -309,7 +320,11 @@ export default function MockTestClient({ test }: Props) {
                         <div style={{ fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem', color: 'var(--primary)' }}>
                           Explanation
                         </div>
-                        <p style={{ fontSize: '0.9rem', lineHeight: 1.6, color: 'var(--on-surface)' }}>{q.explanation}</p>
+                        <div 
+                          style={{ fontSize: '0.9rem', lineHeight: 1.6, color: 'var(--on-surface)' }}
+                          className="rich-text-content"
+                          dangerouslySetInnerHTML={{ __html: q.explanation }} 
+                        />
                       </div>
                     )}
 
@@ -363,7 +378,10 @@ export default function MockTestClient({ test }: Props) {
             </Button>
           </header>
 
-          <div className={styles.questionBody}>{currentQuestion.text}</div>
+          <div 
+            className={`${styles.questionBody} rich-text-content`}
+            dangerouslySetInnerHTML={{ __html: currentQuestion.text }}
+          />
 
           <div className={styles.optionsList}>
             {currentQuestion.options.map((option, idx) => (

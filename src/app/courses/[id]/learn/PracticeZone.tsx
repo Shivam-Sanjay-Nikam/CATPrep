@@ -39,7 +39,10 @@ export const PracticeZone: React.FC<PracticeZoneProps> = ({ questions }) => {
           <Card key={q.id} className={styles.questionCard} variant="default">
             <div className={styles.questionHeader}>
               <span className={styles.questionNumber}>Question {index + 1}</span>
-              <p className={styles.questionText}>{q.questionText}</p>
+              <div 
+                className={`${styles.questionText} rich-text-content`}
+                dangerouslySetInnerHTML={{ __html: q.questionText }}
+              />
             </div>
 
             <div className={styles.optionsGrid}>
@@ -84,9 +87,10 @@ export const PracticeZone: React.FC<PracticeZoneProps> = ({ questions }) => {
                 <div className={styles.feedbackTitle}>
                   {isCorrect ? 'Correct!' : 'Not quite right'}
                 </div>
-                <p className={styles.explanationText}>
-                  <strong>Explanation:</strong> {q.explanation}
-                </p>
+                <div className={`${styles.explanationText} rich-text-content`}>
+                  <strong>Explanation:</strong> 
+                  <div dangerouslySetInnerHTML={{ __html: q.explanation }} />
+                </div>
               </div>
             )}
           </Card>

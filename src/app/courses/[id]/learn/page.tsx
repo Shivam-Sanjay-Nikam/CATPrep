@@ -82,7 +82,7 @@ export default async function LearnPage({ params, searchParams }: Props) {
               
               <div className={styles.contentBody}>
                 {currentLesson.content ? (
-                  <div dangerouslySetInnerHTML={{ __html: currentLesson.content }} />
+                  <div className="rich-text-content" dangerouslySetInnerHTML={{ __html: currentLesson.content }} />
                 ) : (
                   <>
                     <p>

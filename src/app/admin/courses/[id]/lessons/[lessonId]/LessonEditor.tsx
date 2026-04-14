@@ -6,6 +6,8 @@ import { upsertLesson, upsertQuestion } from '@/services/adminService';
 import { CurriculumItem, LessonQuestion } from '@/types';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { useToast } from '@/components/ui/ToastProvider';
+import { RichTextEditor } from '@/components/ui/RichTextEditor';
 import styles from '../../editor.module.css';
 
 interface LessonEditorProps {
@@ -16,6 +18,7 @@ interface LessonEditorProps {
 
 export const LessonEditor: React.FC<LessonEditorProps> = ({ courseId, initialLesson, isNew }) => {
   const router = useRouter();
+  const { toast, removeToast } = useToast();
   const [loading, setLoading] = useState(false);
   
   const [lesson, setLesson] = useState<Partial<CurriculumItem>>(initialLesson || {
@@ -57,11 +60,12 @@ export const LessonEditor: React.FC<LessonEditorProps> = ({ courseId, initialLes
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!lesson.id || !lesson.title) {
-      alert('ID and Title are required');
+      toast('ID and Title are required', 'error');
       return;
     }
 
     setLoading(true);
+    const toastId = toast('Saving chapter and questions...', 'loading', Infinity);
     try {
       // 1. Save Lesson
       await upsertLesson({ 
@@ -77,12 +81,14 @@ export const LessonEditor: React.FC<LessonEditorProps> = ({ courseId, initialLes
         } as Partial<LessonQuestion> & { lesson_id: string });
       }
 
-      alert('Chapter and questions saved successfully!');
+      removeToast(toastId);
+      toast('Chapter and questions saved successfully!', 'success');
       router.push(`/admin/courses/${courseId}/lessons`);
       router.refresh();
     } catch (err) {
       console.error('Save failed:', err);
-      alert('Failed to save content. Check permissions.');
+      removeToast(toastId);
+      toast('Failed to save content. Check permissions.', 'error');
     } finally {
       setLoading(false);
     }
@@ -129,14 +135,13 @@ export const LessonEditor: React.FC<LessonEditorProps> = ({ courseId, initialLes
       <div className={styles.formGroup}>
         <label>Lesson Content (HTML/Rich Text)</label>
         <p style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)', marginBottom: '0.5rem' }}>
-          Supports basic HTML for formatting. Use &lt;p&gt;, &lt;h2&gt;, &lt;strong&gt;, etc.
+          Fully supports professional HTML formatting and image insertions.
         </p>
-        <textarea 
-          className={styles.textarea}
-          style={{ minHeight: '400px', fontFamily: 'monospace' }}
-          placeholder="Write your in-depth textual notes here..."
+        <RichTextEditor 
           value={lesson.content || ''}
-          onChange={e => setLesson(prev => ({ ...prev, content: e.target.value }))}
+          onChange={html => setLesson(prev => ({ ...prev, content: html }))}
+          placeholder="Write your in-depth textual notes here..."
+          minHeight="400px"
         />
       </div>
 
@@ -151,12 +156,12 @@ export const LessonEditor: React.FC<LessonEditorProps> = ({ courseId, initialLes
         {questions.map((q, qIndex) => (
           <Card key={q.id || qIndex} variant="default" style={{ padding: '2rem', border: '1px solid var(--outline-variant)' }}>
             <div className={styles.formGroup}>
-              <label>Question {qIndex + 1}</label>
-              <textarea 
-                className={styles.input}
-                style={{ minHeight: '80px' }}
-                value={q.questionText}
-                onChange={e => handleQuestionChange(qIndex, 'questionText', e.target.value)}
+              <label>Question {qIndex + 1} (Rich Text)</label>
+              <RichTextEditor 
+                value={q.questionText || ''}
+                onChange={html => handleQuestionChange(qIndex, 'questionText', html)}
+                placeholder="Enter the question text..."
+                minHeight="100px"
               />
             </div>
 
@@ -181,12 +186,12 @@ export const LessonEditor: React.FC<LessonEditorProps> = ({ courseId, initialLes
             </div>
 
             <div className={styles.formGroup} style={{ marginTop: '1.5rem' }}>
-              <label>Explanation (Shown after answering)</label>
-              <textarea 
-                className={styles.textarea}
-                style={{ minHeight: '60px' }}
-                value={q.explanation}
-                onChange={e => handleQuestionChange(qIndex, 'explanation', e.target.value)}
+              <label>Explanation (Rich Text)</label>
+              <RichTextEditor 
+                value={q.explanation || ''}
+                onChange={html => handleQuestionChange(qIndex, 'explanation', html)}
+                placeholder="Explain why the correct answer is correct..."
+                minHeight="80px"
               />
             </div>
             

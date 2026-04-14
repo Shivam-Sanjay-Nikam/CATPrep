@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { upsertCourse, uploadAsset } from '@/services/adminService';
 import { Course } from '@/types';
 import { Button } from '@/components/ui/Button';
+import { useToast } from '@/components/ui/ToastProvider';
+import { RichTextEditor } from '@/components/ui/RichTextEditor';
 import Image from 'next/image';
 import styles from './editor.module.css';
 
@@ -15,6 +17,7 @@ interface CourseEditorProps {
 
 export const CourseEditor: React.FC<CourseEditorProps> = ({ initialCourse, isNew }) => {
   const router = useRouter();
+  const { toast, removeToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [course, setCourse] = useState<Partial<Course>>(initialCourse || {
     id: '',
@@ -35,6 +38,7 @@ export const CourseEditor: React.FC<CourseEditorProps> = ({ initialCourse, isNew
     if (!file) return;
 
     setUploading(true);
+    const toastId = toast('Uploading thumbnail...', 'loading', Infinity);
     try {
       const fileName = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
       const formData = new FormData();
@@ -43,9 +47,12 @@ export const CourseEditor: React.FC<CourseEditorProps> = ({ initialCourse, isNew
       
       const publicUrl = await uploadAsset(formData);
       setCourse(prev => ({ ...prev, thumbnail: publicUrl }));
+      removeToast(toastId);
+      toast('Thumbnail uploaded successfully', 'success');
     } catch (err) {
       console.error('Upload failed:', err);
-      alert('Failed to upload thumbnail');
+      removeToast(toastId);
+      toast('Failed to upload thumbnail', 'error');
     } finally {
       setUploading(false);
     }
@@ -54,19 +61,22 @@ export const CourseEditor: React.FC<CourseEditorProps> = ({ initialCourse, isNew
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!course.id || !course.title) {
-      alert('ID and Title are required');
+      toast('ID and Title are required', 'error');
       return;
     }
 
     setLoading(true);
+    const toastId = toast('Saving course metadata...', 'loading', Infinity);
     try {
       await upsertCourse(course);
-      alert('Course saved successfully!');
+      removeToast(toastId);
+      toast('Course saved successfully!', 'success');
       router.push('/admin');
       router.refresh();
     } catch (err) {
       console.error('Save failed:', err);
-      alert('Failed to save course. Check permissions.');
+      removeToast(toastId);
+      toast('Failed to save course. Check permissions.', 'error');
     } finally {
       setLoading(false);
     }
@@ -101,12 +111,12 @@ export const CourseEditor: React.FC<CourseEditorProps> = ({ initialCourse, isNew
       </div>
 
       <div className={styles.formGroup}>
-        <label>Description</label>
-        <textarea 
-          className={styles.textarea}
+        <label>Description (Rich Text)</label>
+        <RichTextEditor 
+          value={course.description || ''}
+          onChange={html => setCourse(prev => ({ ...prev, description: html }))}
           placeholder="What will students learn in this course?"
-          value={course.description}
-          onChange={e => setCourse(prev => ({ ...prev, description: e.target.value }))}
+          minHeight="150px"
         />
       </div>
 

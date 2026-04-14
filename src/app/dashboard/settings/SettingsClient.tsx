@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { useRouter } from 'next/navigation';
 
+import { useToast } from '@/components/ui/ToastProvider';
+
 interface ProfileData {
   full_name: string;
   target_iim: string;
@@ -16,17 +18,15 @@ interface ProfileData {
 export default function SettingsClient({ profile }: { profile: ProfileData }) {
   const supabase = createClient();
   const router = useRouter();
+  const { toast } = useToast();
   const [form, setForm] = useState({ ...profile });
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState('');
   const [changingPassword, setChangingPassword] = useState(false);
   const [pwForm, setPwForm] = useState({ current: '', newPw: '', confirm: '' });
-  const [pwMessage, setPwMessage] = useState('');
 
   const saveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
-    setMessage('');
     const { error } = await supabase.auth.updateUser({
       data: {
         full_name: form.full_name,
@@ -35,20 +35,31 @@ export default function SettingsClient({ profile }: { profile: ProfileData }) {
       }
     });
     setSaving(false);
-    if (error) setMessage('Error: ' + error.message);
-    else { setMessage('Profile saved!'); router.refresh(); }
+    if (error) toast('Error: ' + error.message, 'error');
+    else { 
+      toast('Profile saved successfully!', 'success'); 
+      router.refresh(); 
+    }
   };
 
   const changePassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (pwForm.newPw !== pwForm.confirm) { setPwMessage('Passwords do not match.'); return; }
-    if (pwForm.newPw.length < 6) { setPwMessage('Password must be at least 6 characters.'); return; }
+    if (pwForm.newPw !== pwForm.confirm) { 
+      toast('Passwords do not match.', 'error'); 
+      return; 
+    }
+    if (pwForm.newPw.length < 6) { 
+      toast('Password must be at least 6 characters.', 'error'); 
+      return; 
+    }
     setChangingPassword(true);
-    setPwMessage('');
     const { error } = await supabase.auth.updateUser({ password: pwForm.newPw });
     setChangingPassword(false);
-    if (error) setPwMessage('Error: ' + error.message);
-    else { setPwMessage('Password changed successfully!'); setPwForm({ current: '', newPw: '', confirm: '' }); }
+    if (error) toast('Error: ' + error.message, 'error');
+    else { 
+      toast('Password changed successfully!', 'success'); 
+      setPwForm({ current: '', newPw: '', confirm: '' }); 
+    }
   };
 
   const inputStyle: React.CSSProperties = {
@@ -104,11 +115,6 @@ export default function SettingsClient({ profile }: { profile: ProfileData }) {
               </select>
             </div>
           </div>
-          {message && (
-            <div style={{ color: message.startsWith('Error') ? '#c62828' : '#2e7d32', fontWeight: 600, fontSize: '0.9rem' }}>
-              {message}
-            </div>
-          )}
           <div>
             <Button variant="primary" type="submit" disabled={saving}>
               {saving ? 'Saving...' : 'Save Profile'}
@@ -131,11 +137,6 @@ export default function SettingsClient({ profile }: { profile: ProfileData }) {
             <input style={inputStyle} type="password" value={pwForm.confirm} placeholder="Repeat password"
               onChange={e => setPwForm(p => ({ ...p, confirm: e.target.value }))} required />
           </div>
-          {pwMessage && (
-            <div style={{ color: pwMessage.startsWith('Error') || pwMessage.includes('not') ? '#c62828' : '#2e7d32', fontWeight: 600, fontSize: '0.9rem' }}>
-              {pwMessage}
-            </div>
-          )}
           <div>
             <Button variant="primary" type="submit" disabled={changingPassword}>
               {changingPassword ? 'Updating...' : 'Update Password'}

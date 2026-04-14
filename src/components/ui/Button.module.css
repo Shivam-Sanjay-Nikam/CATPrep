@@ -70,3 +70,20 @@
 .fullWidth {
   width: 100%;
 }
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #ffffff;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.secondary .spinner, .outline .spinner, .text .spinner {
+  border-color: rgba(0, 6, 102, 0.1);
+  border-top-color: var(--primary);
+}
