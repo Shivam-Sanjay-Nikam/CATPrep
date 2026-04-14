@@ -12,8 +12,8 @@ interface RawTestRow {
     options: string[];
     correct_index: number;
     explanation?: string;
-    subject?: string;
-    difficulty?: string;
+    subject?: 'Quant' | 'LRDI' | 'VARC';
+    difficulty?: 'Low' | 'Medium' | 'High';
   }>;
 }
 
